@@ -40,7 +40,20 @@ jobs:
         with:
           ruby-version: '3.3'
           bundler-cache: true
+      - name: Extract version
+        id: version
+        run: echo "version=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+      - name: Check existing version
+        id: check
+        run: |
+          if gem info rspec-candy --remote --exact 2>/dev/null | grep -q "${{ steps.version.outputs.version }}"; then
+            echo "exists=true" >> $GITHUB_OUTPUT
+            echo "::notice::Version ${{ steps.version.outputs.version }} already exists on RubyGems"
+          else
+            echo "exists=false" >> $GITHUB_OUTPUT
+          fi
       - name: Push to RubyGems
+        if: steps.check.outputs.exists != 'true'
         uses: rubygems/release-gem@v1
 
   publish-github:
@@ -67,7 +80,14 @@ jobs:
           mkdir -p ~/.gem
           echo ":github: Bearer ${{ secrets.GITHUB_TOKEN }}" >> ~/.gem/credentials
           chmod 0600 ~/.gem/credentials
-          gem push --key github --host https://rubygems.pkg.github.com/aladac *.gem
+          output=$(gem push --key github --host https://rubygems.pkg.github.com/aladac *.gem 2>&1) && echo "$output" || {
+            echo "$output"
+            if echo "$output" | grep -q "already been pushed"; then
+              echo "::notice::Version already exists on GitHub Packages"
+            else
+              exit 1
+            fi
+          }
 
   release:
     name: Create Release
@@ -76,7 +96,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: releases
-      url: ${{ steps.create_release.outputs.html_url }}
+      url: https://github.com/aladac/rspec-candy/releases
     permissions:
       contents: write
     steps:
@@ -90,8 +110,19 @@ jobs:
       - name: Extract version
         id: version
         run: echo "version=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+      - name: Check existing release
+        id: check_release
+        run: |
+          if gh release view v${{ steps.version.outputs.version }} &>/dev/null; then
+            echo "exists=true" >> $GITHUB_OUTPUT
+            echo "::notice::Release v${{ steps.version.outputs.version }} already exists"
+          else
+            echo "exists=false" >> $GITHUB_OUTPUT
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Create Release
-        id: create_release
+        if: steps.check_release.outputs.exists != 'true'
         uses: softprops/action-gh-release@v2
         with:
           name: v${{ steps.version.outputs.version }}
