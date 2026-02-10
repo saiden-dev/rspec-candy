@@ -1,4 +1,5 @@
 # RSpec::Candy
+<img width="974" height="529" alt="image" src="https://github.com/user-attachments/assets/5c8e79f2-658c-4aac-a735-7c5f8a5bf14e" />
 
 [![Gem Version](https://badge.fury.io/rb/rspec-candy.svg)](https://badge.fury.io/rb/rspec-candy)
 [![CI](https://github.com/aladac/rspec-candy/actions/workflows/main.yml/badge.svg)](https://github.com/aladac/rspec-candy/actions/workflows/main.yml)
