@@ -1,5 +1,8 @@
 # RSpec::Candy
 
+[![Gem Version](https://badge.fury.io/rb/rspec-candy.svg)](https://badge.fury.io/rb/rspec-candy)
+[![CI](https://github.com/aladac/rspec-candy/actions/workflows/main.yml/badge.svg)](https://github.com/aladac/rspec-candy/actions/workflows/main.yml)
+
 Eye candy for RSpec: beautiful progress bars and coverage reports.
 
 ## Features
