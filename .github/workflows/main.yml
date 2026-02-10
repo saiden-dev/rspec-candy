@@ -30,15 +30,16 @@ jobs:
       url: https://rubygems.org/gems/rspec-candy
     permissions:
       id-token: write
-      contents: read
+      contents: write
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: '3.3'
-      - name: Build gem
-        run: gem build rspec-candy.gemspec
+          bundler-cache: true
       - name: Push to RubyGems
         uses: rubygems/release-gem@v1
 
