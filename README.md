@@ -9,7 +9,7 @@ Eye candy for RSpec: beautiful progress bars and coverage reports.
 
 - **TTY Progress Bar** - Rich progress bar with ETA, rate, and percentage
 - **Colored Output** - Green for pass, red for fail, yellow for pending
-- **Coverage Table** - Beautiful TTY table showing coverage per file
+- **Coverage Table** - Automatically displays if SimpleCov data exists
 - **Non-TTY Fallback** - Dots/characters when not in a terminal
 
 ## Installation
@@ -30,80 +30,40 @@ bundle install
 
 ## Usage
 
-### Formatter
-
-Use the formatter via command line:
-
-```bash
-bundle exec rspec --require rspec/candy --format RSpec::Candy::Formatter
-```
-
-Or add to `.rspec`:
+Add to `.rspec`:
 
 ```
 --require rspec/candy
 --format RSpec::Candy::Formatter
 ```
 
-### Coverage Report
-
-After running tests with SimpleCov, display a coverage table:
+Then just run:
 
 ```bash
-bundle exec rspec-candy-coverage
+bundle exec rspec
 ```
 
-Or programmatically:
-
-```ruby
-require "rspec/candy"
-
-reporter = RSpec::Candy::Coverage.new
-reporter.report
-```
-
-### Rake Task
-
-Add to your Rakefile:
-
-```ruby
-desc "Run tests with candy formatter and show coverage"
-task :candy do
-  system("bundle exec rspec --require rspec/candy --format RSpec::Candy::Formatter")
-  system("bundle exec rspec-candy-coverage")
-end
-```
+You get a progress bar, test results, and coverage table (if SimpleCov is configured) - all in one.
 
 ## Screenshot
 
 ```
-Running 820 examples...
+Running 870 examples...
 
-[████████████████████████████████████████████████████████████████░░░░░░░░░░░] 750/820 91% │ 00:03 │ 125.3/s
+[████████████████████████████████████████████████████████████████░░░░░░░░░░░] 750/870 86% │ 00:02 │ 125.3/s
 
-✓ 820 examples, 0 failures
-Finished in 6.54s
+✓ 870 examples, 0 failures
+Finished in 0.73s
 
 ┌──────────────────────┬───────────┬──────────────────────┬────────┐
 │ File                 │ Lines     │ Coverage             │ %      │
 ├──────────────────────┼───────────┼──────────────────────┼────────┤
-│ app.rb               │ 45/50     │ ██████████████████░░ │ 90.0%  │
-│ builder.rb           │ 38/45     │ █████████████████░░░ │ 84.4%  │
+│ cli.rb               │ 185/208   │ ██████████████████░░ │ 88.9%  │
+│ builder.rb           │ 78/89     │ ██████████████████░░ │ 87.6%  │
 └──────────────────────┴───────────┴──────────────────────┴────────┘
 
-Total: 892/950 (93.9%)
-12 files at 100% (not shown)
-```
-
-## Configuration
-
-### Coverage Reporter Options
-
-```ruby
-RSpec::Candy::Coverage.new(
-  coverage_path: "coverage/.resultset.json",  # SimpleCov output path
-  lib_filter: "lib/"                          # Filter files by path
-)
+Total: 2520/3356 (75.1%)
+16 files at 100% (not shown)
 ```
 
 ## Requirements

@@ -25,8 +25,6 @@ Gem::Specification.new do |spec|
         f.start_with?(*%w[bin/ Gemfile .gitignore .rspec spec/ .github/ .standard.yml])
     end
   end
-  spec.bindir = "exe"
-  spec.executables = ["rspec-candy-coverage"]
   spec.require_paths = ["lib"]
 
   spec.add_dependency "rspec-core", ">= 3.0"
